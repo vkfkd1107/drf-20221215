@@ -5,40 +5,37 @@ from todo.models import Todo
 from rest_framework import status
 from rest_framework.response import Response
 from todo.serializers import TodoSerializer
+from rest_framework.decorators import api_view
 
 
-# First: class APIView를 기반으로 구현하기
-class TodoList(APIView):
-    def get(self, request, format=None):
-        qs = Todo.objects.all()
-        serializer = TodoSerializer(qs, many=True)
+# First: function view로 구현하기
+@api_view(['GET', 'POST'])
+def todo_list(request):
+    if request.method == 'GET':
+        serializer = TodoSerializer(Todo.objects.all(), many=True)
         return Response(serializer.data)
-    def post(self, request, format=None):
+    else:
         serializer = TodoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         else:
-            return Response(serializer.data, status=400)
+            return Response(serializer.error, status=400)
 
 
-class TodoDetail(APIView):
-    def get_object(self, pk):
-        return get_object_or_404(Todo, pk=pk)
-    def get(self, request, pk, format=None):
-        todo = self.get_object(pk)
+@api_view(['GET', 'PUT', 'DELETE'])
+def todo_detail(request, pk):
+    todo = get_object_or_404(Todo, pk=pk)
+    if request.method == 'GET':
         serializer = TodoSerializer(todo)
         return Response(serializer.data)
-    def put(self, request, pk, format=None):
-        todo = self.get_object(pk)
+    elif request.method == 'PUT':
         serializer = TodoSerializer(todo, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
-            return Response(serializer.error)
-    def delete(self, request, pk, format=None):
-        todo = self.get_object(pk)
-        print(todo)
+            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+    else:
         todo.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

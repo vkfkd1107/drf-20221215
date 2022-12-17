@@ -6,6 +6,6 @@ router = DefaultRouter()
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('todo-list', views.TodoList.as_view(), name='todo_list'),
-    path('todo/<int:pk>/', views.TodoDetail.as_view(), name='todo_detail'),
+    path('todo-list', views.todo_list, name='todo_list'),
+    path('todo/<int:pk>/', views.todo_detail, name='todo_detail'),
 ]
