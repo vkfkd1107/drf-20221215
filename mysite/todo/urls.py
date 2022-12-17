@@ -6,6 +6,14 @@ router = DefaultRouter()
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('todo-list', views.todo_list, name='todo_list'),
-    path('todo/<int:pk>/', views.todo_detail, name='todo_detail'),
+    path(
+        'todo',
+        views.TodoListAPIView.as_view(),
+        name='todo'
+    ),
+    path(
+        'todo/<int:pk>',
+        views.TodoDetailAPIView.as_view(),
+        name='todo_detail'
+    ),
 ]

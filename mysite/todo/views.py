@@ -6,36 +6,37 @@ from rest_framework import status
 from rest_framework.response import Response
 from todo.serializers import TodoSerializer
 from rest_framework.decorators import api_view
+from rest_framework import generics
+from rest_framework import mixins
 
 
-# First: function view로 구현하기
-@api_view(['GET', 'POST'])
-def todo_list(request):
-    if request.method == 'GET':
-        serializer = TodoSerializer(Todo.objects.all(), many=True)
-        return Response(serializer.data)
-    else:
-        serializer = TodoSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        else:
-            return Response(serializer.error, status=400)
+# mixin 구현
+class TodoListAPIView(
+        mixins.ListModelMixin, mixins.CreateModelMixin,
+        generics.GenericAPIView
+    ):
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def todo_detail(request, pk):
-    todo = get_object_or_404(Todo, pk=pk)
-    if request.method == 'GET':
-        serializer = TodoSerializer(todo)
-        return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = TodoSerializer(todo, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        todo.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class TodoDetailAPIView(
+    mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin, generics.GenericAPIView
+    ):
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
