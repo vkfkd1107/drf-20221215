@@ -10,7 +10,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = AuthorSerializer()
+    # author = AuthorSerializer()
     class Meta:
         model = Post
         fields = [
@@ -19,5 +19,5 @@ class PostSerializer(serializers.ModelSerializer):
             'context',
             'created_at',
             'updated_at',
-            'author',
+            # 'author',
         ]
