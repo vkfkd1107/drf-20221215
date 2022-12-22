@@ -10,33 +10,12 @@ from rest_framework import generics
 from rest_framework import mixins
 
 
-# mixin 구현
-class TodoListAPIView(
-        mixins.ListModelMixin, mixins.CreateModelMixin,
-        generics.GenericAPIView
-    ):
+# generic 구현
+class TodoListAPIView(generics.ListCreateAPIView):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-
-class TodoDetailAPIView(
-    mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin, generics.GenericAPIView
-    ):
+class TodoDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
-
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
-    def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
