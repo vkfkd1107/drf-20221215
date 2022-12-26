@@ -10,12 +10,7 @@ from rest_framework import generics
 from rest_framework import mixins
 
 
-# generic 구현
-class TodoListAPIView(generics.ListCreateAPIView):
-    queryset = Todo.objects.all()
-    serializer_class = TodoSerializer
-
-
-class TodoDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+# viewset 구현
+class TodoModelViewSet(ModelViewSet):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
