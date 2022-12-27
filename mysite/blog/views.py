@@ -6,9 +6,26 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework import generics, mixins, viewsets
+from rest_framework.renderers import TemplateHTMLRenderer
 
 
-# viewset 구현
-class PostModelViewSet(viewsets.ModelViewSet):
+# template html renderer 구현
+class PostList(generics.RetrieveAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    renderer_classes = [TemplateHTMLRenderer]
+
+    def get(self, request, *args, **kwargs):
+        return Response({
+            'posts': self.get_queryset()
+        }, template_name='post_list.html')
+
+
+class PostDetail(generics.RetrieveAPIView):
+    queryset = Post.objects.all()
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'post.html'
+
+    def get(self, request, *args, **kwargs):
+        return Response({
+            'post': self.get_object()
+        })

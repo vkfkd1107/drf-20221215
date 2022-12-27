@@ -2,10 +2,8 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from blog import views
 
-router = DefaultRouter()
-router.register('post', views.PostModelViewSet)
-
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('post', views.PostList.as_view(), name='post'),
+    path('post/<int:pk>', views.PostDetail.as_view(), name='post'),
 ]
