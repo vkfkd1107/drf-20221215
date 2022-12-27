@@ -8,6 +8,7 @@ urlpatterns = [
     path('post/', views.TodoList.as_view(), name='post'),
     path('post/<int:pk>', views.TodoDetail.as_view(), name='post'),
     path('static_html_renderer', views.static_html_renderer, name='static_html_renderer'),
+    path('format_renderer', views.format_renderer, name='format_renderer'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

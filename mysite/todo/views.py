@@ -39,3 +39,8 @@ class TodoDetail(generics.RetrieveAPIView):
 def static_html_renderer(request):
     data = "<html><body><h1>Hello, Here is Todo App</h1></body></html>"
     return Response(data)
+
+
+@api_view(['GET'])
+def format_renderer(request, format=None):
+    return Response([])
