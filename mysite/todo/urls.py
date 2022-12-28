@@ -4,11 +4,10 @@ from todo import views
 from rest_framework.urlpatterns import format_suffix_patterns
 
 
-urlpatterns = [
-    path('post/', views.TodoList.as_view(), name='post'),
-    path('post/<int:pk>', views.TodoDetail.as_view(), name='post'),
-    path('static_html_renderer', views.static_html_renderer, name='static_html_renderer'),
-    path('format_renderer', views.format_renderer, name='format_renderer'),
-]
+router = DefaultRouter()
+router.register('todo', views.TodoViewSet)
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+
+urlpatterns = [
+    path('', include(router.urls))
+]
